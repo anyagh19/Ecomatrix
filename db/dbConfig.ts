@@ -12,6 +12,10 @@ export async function connectDb() {
             console.log("error while connecting to db" , error)
         })
     } catch (error: unknown) {
+        let message = "something went wrong"
+        if(error instanceof Error){
+            message = error.message
+        }
         console.log("coonecting to db error" , error)
     }
 }
