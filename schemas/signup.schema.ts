@@ -13,7 +13,7 @@ export const signUpSchema = z.object({
     address: z.string(),
     phone: z.string()
         .max(10, { message: "phone number must be 10 digits" }),
-    role: z.enum(["employee", "worker"]),
+    role: z.enum(["Admin", "Employee", "Worker"]),
     profileImage: z
         .instanceof(File, { message: "Profile image is required" })
         .refine((file) => file.size > 0, "File cannot be empty")
