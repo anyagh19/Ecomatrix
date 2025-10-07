@@ -25,6 +25,7 @@ import { Label } from "@/components/ui/label"
 import { signUpSchema } from "@/schemas/signup.schema"
 import { useRouter } from "next/navigation"
 import axios from 'axios'
+import Link from "next/link"
 
 // ✅ Define full validation schema
 // const formSchema = z.object({
@@ -96,7 +97,7 @@ function SignUpForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 border-2 p-6 rounded-lg w-[90%] md:w-[40%] mx-auto"
+        className="space-y-6 border-2 p-6 rounded-lg w-[90%] md:w-[35%] "
       >
         {/* Name */}
         <FormField
@@ -217,6 +218,7 @@ function SignUpForm() {
         <Button type="submit" className="w-full">
           Submit
         </Button>
+         <p>Already have an account?<Link href="/sign-in"> <span className="text-blue-500">Login</span></Link></p>
       </form>
     </Form>
   )

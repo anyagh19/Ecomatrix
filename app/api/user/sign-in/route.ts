@@ -1,14 +1,15 @@
 import { connectDb } from "@/db/dbConfig";
 import User from "@/models/user.model";
-import { signInSchema } from "@/schemas/signin.schema";
+
 import { NextRequest, NextResponse } from "next/server";
+
 
 const generateAccessAndRefreshToken = async (userId: string) => {
     const user = await User.findById(userId);
     if (!user) throw new Error("User does not exist");
 
-    const accessToken = (user as any).generateAccessToken();
-    const refreshToken = (user as any).generateRefreshToken();
+    const accessToken = (user).generateAccessToken();
+    const refreshToken = (user).generateRefreshToken();
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
@@ -20,21 +21,15 @@ export async function POST(request: NextRequest) {
     await connectDb();
 
     try {
-        const { email, password } = signInSchema.parse(await request.json());
-
-        //for postman params
-        //   const url = new URL(request.url);
-        //   const email = url.searchParams.get('email');
-        //   const password = url.searchParams.get('password');
-
-
+        const body = await request.json();
+        const { email, password } = body
         console.log(email, password)
         const user = await User.findOne({ email });
         if (!user) {
             return NextResponse.json({ error: "No user found" }, { status: 401 });
         }
 
-        const isPasswordValid = await (user as any).isPasswordCorrect(password);
+        const isPasswordValid = await (user).isPasswordCorrect(password);
         if (!isPasswordValid) {
             return NextResponse.json({ error: "Invalid credentials" }, { status: 400 });
         }
@@ -42,28 +37,46 @@ export async function POST(request: NextRequest) {
         const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id as string);
 
         // Prepare cookies properly
-        const cookies = [
-            `accessToken=${accessToken}; HttpOnly; Path=/; Max-Age=3600`,
-            `refreshToken=${refreshToken}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7}`, // 7 days
-        ].join(',');
+        // const cookies = [
+        //     `accessToken=${accessToken}; HttpOnly; Path=/; Max-Age=3600`,
+        //     `refreshToken=${refreshToken}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7}`, // 7 days
+        // ].join(',');
 
         // Remove password from response
         const userData = user.toObject();
-        console.log("user", userData)
+        //console.log("user", userData)
 
-        return Response.json(
+        const res = NextResponse.json(
             {
+                success: true,
                 statusCode: 200,
                 message: "User logged in successfully",
                 data: userData,
             },
-            {
-                status: 200,
-                headers: {
-                    "Set-Cookie": cookies,
-                },
-            }
+
         );
+        // ✅ Set cookies the right way
+        res.cookies.set({
+            name: "accessToken",
+            value: accessToken,
+            httpOnly: true,
+            path: "/",
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production" ? true : false,
+            maxAge: 60 * 60, // 1 hour
+        });
+
+        res.cookies.set({
+            name: "refreshToken",
+            value: refreshToken,
+            httpOnly: true,
+            path: "/",
+            sameSite: "lax",
+            secure: process.env.NODE_ENV === "production" ? true : false,
+            maxAge: 60 * 60 * 24 * 7, // 7 days
+        });
+
+        return res;
     } catch (error: unknown) {
         console.error("Error at sign-in:", error);
 

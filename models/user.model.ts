@@ -1,4 +1,4 @@
-import { Document, Schema,  } from "mongoose";
+import { Document, Schema, } from "mongoose";
 import mongoose from "mongoose";
 import bcryptjs from "bcryptjs"
 import jwt from 'jsonwebtoken'
@@ -15,9 +15,13 @@ export interface IUser extends Document {
     //verifyCode: string;
     verifyCodeExpiry: Date,
     refreshToken: string;
+
+    isPasswordCorrect(password: string): Promise<boolean>;
+    generateAccessToken(): string;
+    generateRefreshToken(): string;
 }
 
-const userSchema: Schema<IUser> = new Schema({
+const userSchema: Schema<IUser> = new Schema<IUser>({
     name: {
         type: String,
         required: [true, "Name is required"],
@@ -94,17 +98,17 @@ userSchema.methods.generateAccessToken = function () {
         name: this.name,
         role: this.role,
     },
-    process.env.ACCESS_TOKEN_SECRET as string,
-    {
-        expiresIn: ((process.env.ACCESS_TOKEN_EXPIRY as string) ||  '1h') as any
-    })
+        process.env.ACCESS_TOKEN_SECRET as string,
+        {
+            expiresIn: ((process.env.ACCESS_TOKEN_EXPIRY as string) || '1h') as any
+        })
 }
 
-userSchema.methods.generateRefreshToken = function(){
+userSchema.methods.generateRefreshToken = function () {
     //short lived accessed token
     return jwt.sign(
         {
-            _id : this._id,
+            _id: this._id,
 
         },
         process.env.REFRESH_TOKEN_SECRET as string,
@@ -114,6 +118,6 @@ userSchema.methods.generateRefreshToken = function(){
     )
 }
 
-const User = (mongoose.models.User as mongoose.Model<IUser>) || mongoose.model<IUser>("User" , userSchema);
+const User = (mongoose.models.User as mongoose.Model<IUser>) || mongoose.model<IUser>("User", userSchema);
 
 export default User;

@@ -1,5 +1,5 @@
 import User from "@/models/user.model";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { uploadOnCloudinary } from "@/lib/cloudinary";
 import path from "path";
 import fs from "fs/promises";
@@ -53,9 +53,9 @@ export async function POST(request: NextRequest) {
             profileImage: cloudinaryUrl?.url,
         });
 
-        return Response.json({ message: "User created successfully", user }, { status: 201 });
-    } catch (error: any) {
+        return NextResponse.json({success: true, message: "User created successfully", user }, { status: 201 });
+    } catch (error: unknown) {
         console.error(error);
-        return Response.json({ message: error.message || "Something went wrong" }, { status: 500 });
+        return NextResponse.json({ message: "Something went wrong" }, { status: 500 });
     }
 }

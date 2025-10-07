@@ -11,7 +11,7 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET // Click 'View API Keys' above to copy your API secret
 });
 
-const uploadOnCloudinary = async (localFilePath : any) => {
+const uploadOnCloudinary = async (localFilePath : string) => {
     try {
         if(!localFilePath) return null
 
@@ -32,11 +32,11 @@ const uploadOnCloudinary = async (localFilePath : any) => {
     }
 }
 
-const deleteFromCloudinary = async (publicId : any) => {
+const deleteFromCloudinary = async (publicId : string) => {
     try {
-        const result = await cloudinary.uploader.destroy(publicId)
+        await cloudinary.uploader.destroy(publicId)
     } catch (error) {
-        console.log("failed to delete from cloudinary")
+        console.log("failed to delete from cloudinary", error)
     }
 }
 
