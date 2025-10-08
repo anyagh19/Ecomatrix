@@ -61,7 +61,7 @@ function Header() {
     const router = useRouter();
 
     const [user, setUser] = useState<any>(null)
-    console.log("header", user)
+    // console.log("header", user)
 
     useEffect(() => {
         fetch("/api/user/current-user", {
