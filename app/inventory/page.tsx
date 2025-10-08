@@ -7,7 +7,7 @@ import InventoryTable from '@/modules/inventory/components/inventoryTable';
 import axios from 'axios';
 import CreateProductDialog from '@/modules/inventory/components/dialogs/createProductDialog';
 import AddProductDialog from '@/modules/inventory/components/dialogs/addProductDialog';
-function page() {
+function Page() {
   const [role, setRole] = useState(null)
   const [isCreateProductDialogOpen, setIsCreateProductDialogOpen] = useState(false)
   const [isAddProductDialogOpen, setIsAddProductDialogOpen] = useState(false)
@@ -54,4 +54,4 @@ function page() {
   )
 }
 
-export default page
+export default Page

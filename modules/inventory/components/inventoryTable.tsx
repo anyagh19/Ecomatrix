@@ -24,7 +24,7 @@ function InventoryTable() {
       const res = await axios.get("/api/inventory/get-all-products");
       const allProducts = res.data.data || [];
       setProducts(allProducts);
-      setFilteredProducts(allProducts.filter((p) => p.itemQuantity > 0));
+      setFilteredProducts(allProducts.filter((p : storeProduct) => p.itemQuantity > 0));
     } catch (error) {
       console.error("Error fetching products:", error);
     }
