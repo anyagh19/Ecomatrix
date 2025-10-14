@@ -10,29 +10,36 @@ import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import { storeProduct } from "@/models/store.model";
 import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import UpdateProductDialog from "./dialogs/updateProductDialog";
+import ProductHistoryDialog from "./dialogs/productHistoryDialog";
 
 function InventoryTable() {
     const [products, setProducts] = useState<storeProduct[]>([])
     const [filteredProducts, setFilteredProducts] = useState<storeProduct[]>([]);
     const [role, setRole] = useState(null)
+    const [selectedProduct, setSelectedProduct] = useState<storeProduct | null>(null);
+    const [isUpdateProductOpen, setIsUpdateProductOpen] = useState(false)
+    const [isProductHistoryDialogOpen , setIsProductHistoryDialogOpen] = useState(false)
 
-    console.log("role", role)
+    // console.log("role", role)
 
-   // ✅ useCallback prevents recreation of fetch function unnecessarily
-  const fetchProducts = useCallback(async () => {
-    try {
-      const res = await axios.get("/api/inventory/get-all-products");
-      const allProducts = res.data.data || [];
-      setProducts(allProducts);
-      setFilteredProducts(allProducts.filter((p : storeProduct) => p.itemQuantity > 0));
-    } catch (error) {
-      console.error("Error fetching products:", error);
-    }
-  }, []);
+    // ✅ useCallback prevents recreation of fetch function unnecessarily
+    const fetchProducts = useCallback(async () => {
+        try {
+            const res = await axios.get("/api/inventory/get-all-products");
+            const allProducts = res.data.data || [];
+            console.log('a',allProducts)
+            setProducts(allProducts);
+            setFilteredProducts(allProducts.filter((p: storeProduct) => p.itemQuantity > 0));
+        } catch (error) {
+            console.error("Error fetching products:", error);
+        }
+    }, []);
+    console.log('f',filteredProducts)
 
-  useEffect(() => {
-    fetchProducts(); // run initially
-  }, [fetchProducts]);
+    useEffect(() => {
+        fetchProducts(); // run initially
+    }, [fetchProducts]);
 
     useEffect(() => {
         const fetchRole = async () => {
@@ -47,7 +54,15 @@ function InventoryTable() {
         fetchRole()
     }, [])
 
+    const handleUpdateClick = (product: storeProduct) => {
+        setSelectedProduct(product);
+        setIsUpdateProductOpen(true);
+    };
 
+    const handleHistoryClick = (product: storeProduct) => {
+        setSelectedProduct(product);
+        setIsProductHistoryDialogOpen(true);
+    };
 
 
     return (
@@ -80,8 +95,10 @@ function InventoryTable() {
 
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem className="font-semibold">Update</DropdownMenuItem>
                                                 <DropdownMenuItem className="font-semibold">Issue</DropdownMenuItem>
+                                                <DropdownMenuItem className="font-semibold" onClick={() => handleHistoryClick(p)}>History</DropdownMenuItem>
+                                                <DropdownMenuItem className="font-semibold" onClick={() => handleUpdateClick(p)}>Update</DropdownMenuItem>
+                                                <DropdownMenuItem className="font-semibold">Delete</DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </TableCell>
@@ -90,6 +107,18 @@ function InventoryTable() {
                     ))}
                 </TableBody>
             </Table>
+            {/* ✅ Dialog moved outside the map */}
+            <UpdateProductDialog
+                isOpen={isUpdateProductOpen}
+                onClose={() => setIsUpdateProductOpen(false)}
+                product={selectedProduct}
+                onUpdated={fetchProducts}
+            />
+            <ProductHistoryDialog
+                isOpen={isProductHistoryDialogOpen}
+                onClose={() => setIsProductHistoryDialogOpen(false)}
+                product={selectedProduct}
+            />
         </div>
     );
 }

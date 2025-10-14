@@ -1,10 +1,10 @@
-import { connectDb } from "@/db/dbConfig";
-import {StoreProduct }from "@/models/store.model";
+import {  connectInventoryDb } from "@/db/dbConfig";
+import {getInventoryModel }from "@/models/store.model";
 import { NextResponse } from "next/server";
 
 
 export async function POST(request: Request) {
-    await connectDb();
+    await connectInventoryDb();
 
     try {
         const body = await request.json()
@@ -16,6 +16,7 @@ export async function POST(request: Request) {
               );
         }
 
+        const StoreProduct = await getInventoryModel();
         const createdProduct = await StoreProduct.create({
             itemName,
             itemRate,

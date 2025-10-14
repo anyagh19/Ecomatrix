@@ -2,7 +2,6 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { StoreProduct } from '@/models/store.model';
 import axios from 'axios';
 import React from 'react'
 import { useForm } from 'react-hook-form';
@@ -36,8 +35,8 @@ function CreateProductDialog({ isOpen, onClose }: createProductDialogProps) {
                 itemRate: data.itemRate,
                 itemQuantity : "0"
             })
-            return res
             onClose()
+            window.location.reload()
         } catch (error) {
             console.log(error)
         }

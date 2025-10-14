@@ -1,4 +1,6 @@
+import { connectInventoryDb } from "@/db/dbConfig";
 import mongoose, { Schema, Document, models } from "mongoose";
+import { Connection } from "mongoose";
 
 
 
@@ -9,7 +11,7 @@ export interface storeProductUpdateHistory {
 }
 
 export interface storeProduct extends Document {
-    _id : string;
+    _id: string;
     itemName: string;
     itemRate: number;
     itemQuantity: number;
@@ -51,7 +53,14 @@ const storeProductSchema: Schema<storeProduct> = new Schema({
     { timestamps: true })
 
 
-const StoreProduct =models.StoreProduct ||  mongoose.model<storeProduct>("StoreProduct", storeProductSchema)
-//const StoreProductUpdateHistory = mongoose.models.StoreProductUpdateHistory || mongoose.model<storeProductUpdateHistory>("StoreProductUpdateHistory", storeProductUpdateHistorySchema)
+let InventoryModel: ReturnType<Connection["model"]> | null = null;
 
-export { StoreProduct };
+export const getInventoryModel = async () => {
+    const inventoryDb = await connectInventoryDb(); // ✅ call the function
+    if (!InventoryModel) {
+        InventoryModel =
+            inventoryDb.models.storeProduct ||
+            inventoryDb.model<storeProduct>("StoreProduct", storeProductSchema);
+    }
+    return InventoryModel;
+};

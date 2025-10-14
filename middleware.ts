@@ -30,5 +30,5 @@ export async function middleware(req: NextRequest) {
 
 // Specify which routes the middleware applies to
 export const config = {
-  matcher: ['/dashboard/:path*', '/inventory/:path*'], // protect these routes
+  matcher: ['/dashboard/:path*', '/inventory/:path*', '/manufacturing/:path*' , '/jobs/:path*' , '/ready-goods/:path*' , '/outside-processing/:path*'], // protect these routes
 };

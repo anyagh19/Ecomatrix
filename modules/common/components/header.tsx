@@ -100,7 +100,26 @@ function Header() {
                                 <Link href="/inventory">Inventory</Link>
                             </NavigationMenuLink>
                         </NavigationMenuItem>
-
+                        <NavigationMenuItem>
+                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                <Link href="/outside-processing">Outside Processing</Link>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                <Link href="/manufacturing">Manufacturing</Link>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                <Link href="/ready-goods">Ready Goods</Link>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
+                        <NavigationMenuItem>
+                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                <Link href="/job">Jobs</Link>
+                            </NavigationMenuLink>
+                        </NavigationMenuItem>
                     </NavigationMenuList>
                 </NavigationMenu>
             </div>

@@ -1,10 +1,10 @@
-import { connectDb } from "@/db/dbConfig";
-import { StoreProduct } from "@/models/store.model";
+import {  connectInventoryDb } from "@/db/dbConfig";
+import { getInventoryModel, storeProduct} from "@/models/store.model";
 import { NextRequest, NextResponse } from "next/server";
 
 
 export async function POST(request: NextRequest) {
-    await connectDb();
+    await connectInventoryDb();
 
     try {
         const body = await request.json();
@@ -13,8 +13,8 @@ export async function POST(request: NextRequest) {
         if(!quantityAdded || !userName || !itemName){
             return NextResponse.json({message: "please enter quantity" , status: 502})
         }
-
-        const product = await StoreProduct.findOne({itemName})
+        const StoreProduct = await getInventoryModel();
+        const product = await StoreProduct.findOne({itemName}) as storeProduct ;
 
         if(!product){
             console.log("no product")

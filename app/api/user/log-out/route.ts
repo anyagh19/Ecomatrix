@@ -1,8 +1,8 @@
-import { connectDb } from "@/db/dbConfig";
+import { connectAuthDb } from "@/db/dbConfig";
 import { NextResponse } from "next/server";
 
 export async function POST() {
-  await connectDb();
+  await connectAuthDb();
   try {
     const response = NextResponse.json(
       { message: "Cookie cleared" },

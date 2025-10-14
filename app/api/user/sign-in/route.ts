@@ -1,15 +1,16 @@
-import { connectDb } from "@/db/dbConfig";
-import User from "@/models/user.model";
+import { connectAuthDb } from "@/db/dbConfig";
+import { getUserModel, IUser } from "@/models/user.model";
+import { Model } from "mongoose";
 
 import { NextRequest, NextResponse } from "next/server";
 
 
-const generateAccessAndRefreshToken = async (userId: string) => {
-    const user = await User.findById(userId);
+const generateAccessAndRefreshToken = async (UserModel:Model<IUser>, userId: string) => {
+    const user = await UserModel.findById(userId);
     if (!user) throw new Error("User does not exist");
 
-    const accessToken = (user).generateAccessToken();
-    const refreshToken = (user).generateRefreshToken();
+    const accessToken = user.generateAccessToken();
+    const refreshToken = user.generateRefreshToken();
 
     user.refreshToken = refreshToken;
     await user.save({ validateBeforeSave: false });
@@ -18,12 +19,13 @@ const generateAccessAndRefreshToken = async (userId: string) => {
 };
 
 export async function POST(request: NextRequest) {
-    await connectDb();
+    await connectAuthDb();
 
     try {
         const body = await request.json();
         const { email, password } = body
         console.log(email, password)
+        const User = await getUserModel()
         const user = await User.findOne({ email });
         if (!user) {
             return NextResponse.json({ error: "No user found" }, { status: 401 });
@@ -34,14 +36,9 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ error: "Invalid credentials" }, { status: 400 });
         }
 
-        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(user._id as string);
+        const { accessToken, refreshToken } = await generateAccessAndRefreshToken(User , user._id as string);
 
-        // Prepare cookies properly
-        // const cookies = [
-        //     `accessToken=${accessToken}; HttpOnly; Path=/; Max-Age=3600`,
-        //     `refreshToken=${refreshToken}; HttpOnly; Path=/; Max-Age=${60 * 60 * 24 * 7}`, // 7 days
-        // ].join(',');
-
+        
         // Remove password from response
         const userData = user.toObject();
         //console.log("user", userData)

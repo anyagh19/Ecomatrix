@@ -1,7 +1,9 @@
-import { Document, Schema, } from "mongoose";
+import { Document, Schema, Connection } from "mongoose";
 import mongoose from "mongoose";
 import bcryptjs from "bcryptjs"
 import jwt from 'jsonwebtoken'
+import { connectAuthDb } from "@/db/dbConfig";
+import { Model } from "mongoose";
 
 export interface IUser extends Document {
     name: string;
@@ -118,6 +120,12 @@ userSchema.methods.generateRefreshToken = function () {
     )
 }
 
-const User = (mongoose.models.User as mongoose.Model<IUser>) || mongoose.model<IUser>("User", userSchema);
+let UserModel: Model<IUser> | null = null;
 
-export default User;
+export const getUserModel = async () => {
+  const authDb = await connectAuthDb();
+  if (!UserModel) {
+    UserModel = authDb.models.User || authDb.model<IUser>("User", userSchema);
+  }
+  return UserModel;
+};

@@ -1,14 +1,15 @@
-import User from "@/models/user.model";
+
 import { NextRequest, NextResponse } from "next/server";
 import { uploadOnCloudinary } from "@/lib/cloudinary";
 import path from "path";
 import fs from "fs/promises";
-import { connectDb } from "@/db/dbConfig";
+import { connectAuthDb } from "@/db/dbConfig";
+import { getUserModel } from "@/models/user.model";
 
 const uploadDir = path.join(process.cwd(), "public/temp");
 
 export async function POST(request: NextRequest) {
-    await connectDb();
+    await connectAuthDb();
     try {
         const formData = await request.formData();
 
@@ -25,6 +26,7 @@ export async function POST(request: NextRequest) {
         }
 
         // check if user already exists
+        const User = await getUserModel();
         const isUserExist = await User.findOne({ $or: [{ email }, { phone }] });
         if (isUserExist) {
             return Response.json({ message: "User already exists" }, { status: 400 });
