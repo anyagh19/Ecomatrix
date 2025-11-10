@@ -1,11 +1,12 @@
 "use server";
 
 import { connectInventoryDb } from "@/db/dbConfig";
-import { StoreProduct } from "@/models/store.model";
+import { getInventoryModel } from "@/models/store.model";
 
 export const getInventoryProduct = async () => {
   try {
     await connectInventoryDb(); // ensure DB connection
+    const StoreProduct = await getInventoryModel();
     const products = await StoreProduct.find();
     return products; // return the array directly
   } catch (error) {

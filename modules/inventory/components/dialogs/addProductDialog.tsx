@@ -36,7 +36,7 @@ function AddProductDialog({ isOpen, onClose  }: addProductDialogProps) {
     useEffect(() => {
         const fetchUser = async () => {
             const res = await axios.get('/api/user/current-user')
-            console.log("use", res.data.user.name)
+            // console.log("use", res.data.user.name)
             setUserName(res.data.user.name)
             router.push("/inventory")
         }

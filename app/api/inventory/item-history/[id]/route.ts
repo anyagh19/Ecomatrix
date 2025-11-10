@@ -2,10 +2,11 @@ import {  connectInventoryDb } from "@/db/dbConfig"
 import { getInventoryModel, storeProduct } from "@/models/store.model";
 import { NextRequest, NextResponse } from "next/server"
 
-export async function GET(request : NextRequest ,context : { params: { id: string } }) {
+export async function GET(request : NextRequest ,  context: { params: Promise<{ id: string }> }
+) {
     await connectInventoryDb();
 
-    const { id } =  context.params
+    const { id } = await context.params
     try {
         const StoreProduct = await getInventoryModel();
         const product = await StoreProduct.findOne(

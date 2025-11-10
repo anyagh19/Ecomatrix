@@ -2,9 +2,9 @@ import {  connectInventoryDb } from "@/db/dbConfig";
 import { getInventoryModel, storeProduct } from "@/models/store.model";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, context : { params: Promise<{ id: string }> }) {
     await connectInventoryDb();
-    const resolvedParams = await params;
+    const resolvedParams = await context.params;
     const { id } = resolvedParams;
 
     try {
