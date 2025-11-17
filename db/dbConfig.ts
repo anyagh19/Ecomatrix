@@ -3,6 +3,7 @@ import mongoose, { Connection } from "mongoose";
 let authConnection: Connection | null = null;
 let inventoryConnection: Connection | null = null;
 let jobConnection: Connection | null = null;
+let outsideProcessingConnection : Connection | null = null;
 
 
 export async function connectAuthDb(): Promise<Connection> {
@@ -33,4 +34,14 @@ export async function connectJobDb(): Promise<Connection> {
   jobConnection.on("error", (err) => console.error("❌ Inventory DB connection error:", err));
 
   return jobConnection;
+}
+
+export async function connectOutsideProcessingDb(): Promise<Connection> {
+  if (outsideProcessingConnection) return outsideProcessingConnection;
+
+  outsideProcessingConnection = await mongoose.createConnection(process.env.MONGODB_OUTSIDEPROCESSING_URL!);
+  outsideProcessingConnection.on("connected", () => console.log("✅ Connected to Inventory DB"));
+  outsideProcessingConnection.on("error", (err) => console.error("❌ Inventory DB connection error:", err));
+
+  return outsideProcessingConnection;
 }

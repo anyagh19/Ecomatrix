@@ -12,6 +12,7 @@ import { storeProduct } from "@/models/store.model";
 import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import UpdateProductDialog from "./dialogs/updateProductDialog";
 import ProductHistoryDialog from "./dialogs/productHistoryDialog";
+import IssueProductDialog from "./dialogs/issueProductDialog";
 
 function InventoryTable() {
     const [products, setProducts] = useState<storeProduct[]>([])
@@ -20,6 +21,7 @@ function InventoryTable() {
     const [selectedProduct, setSelectedProduct] = useState<storeProduct | null>(null);
     const [isUpdateProductOpen, setIsUpdateProductOpen] = useState(false)
     const [isProductHistoryDialogOpen , setIsProductHistoryDialogOpen] = useState(false)
+    const [isIssueProductDialogOpen , setIsIssueProductDialogOpen] = useState(false)
 
     // console.log("role", role)
 
@@ -64,6 +66,11 @@ function InventoryTable() {
         setIsProductHistoryDialogOpen(true);
     };
 
+    const handleIssueClick = (product: storeProduct) => {
+        setSelectedProduct(product);
+        setIsIssueProductDialogOpen(true);
+    };
+
 
     return (
         <div className="overflow-hidden rounded-md border">
@@ -95,7 +102,7 @@ function InventoryTable() {
 
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
-                                                <DropdownMenuItem className="font-semibold">Issue</DropdownMenuItem>
+                                                <DropdownMenuItem className="font-semibold" onClick={() => handleIssueClick(p)}>Issue</DropdownMenuItem>
                                                 <DropdownMenuItem className="font-semibold" onClick={() => handleHistoryClick(p)}>History</DropdownMenuItem>
                                                 <DropdownMenuItem className="font-semibold" onClick={() => handleUpdateClick(p)}>Update</DropdownMenuItem>
                                                 <DropdownMenuItem className="font-semibold">Delete</DropdownMenuItem>
@@ -117,6 +124,11 @@ function InventoryTable() {
             <ProductHistoryDialog
                 isOpen={isProductHistoryDialogOpen}
                 onClose={() => setIsProductHistoryDialogOpen(false)}
+                product={selectedProduct}
+            />
+            <IssueProductDialog
+                isOpen={isIssueProductDialogOpen}
+                onClose={() => setIsIssueProductDialogOpen(false)}
                 product={selectedProduct}
             />
         </div>
