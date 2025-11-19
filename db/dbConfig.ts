@@ -40,6 +40,7 @@ export async function connectOutsideProcessingDb(): Promise<Connection> {
   if (outsideProcessingConnection) return outsideProcessingConnection;
 
   outsideProcessingConnection = await mongoose.createConnection(process.env.MONGODB_OUTSIDEPROCESSING_URL!);
+
   outsideProcessingConnection.on("connected", () => console.log("✅ Connected to Inventory DB"));
   outsideProcessingConnection.on("error", (err) => console.error("❌ Inventory DB connection error:", err));
 

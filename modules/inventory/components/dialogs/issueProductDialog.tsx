@@ -3,7 +3,7 @@ import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
 import { Table, TableBody } from '@/components/ui/table';
 import { storeProduct } from '@/models/store.model';
 import axios from 'axios';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 
 interface IssueProductDialogProps {
     isOpen: boolean;
@@ -19,6 +19,16 @@ function IssueProductDialog({ isOpen, onClose, product }: IssueProductDialogProp
         quantity: 0
     });
 
+    useEffect(() => {
+        if (product) {
+            setProductDetails({
+                productName: product.itemName,
+                productQuantity: product.itemQuantity,
+                quantity: 0
+            });
+        }
+    }, [product]);
+
     const handleOutsideSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -26,7 +36,7 @@ function IssueProductDialog({ isOpen, onClose, product }: IssueProductDialogProp
             console.log('Outside Processing Details:', productDetails);
 
             // Issue to outside processing
-            const res = await axios.post('/api/inventory/issue-to-outside-processing', {
+            const res = await axios.put('/api/inventory/issue-to-outside-processing', {
                 itemName: productDetails.productName,
                 quantity: productDetails.quantity
             });

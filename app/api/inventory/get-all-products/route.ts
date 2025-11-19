@@ -8,10 +8,10 @@ export async function GET() {
     try {
         const StoreProduct = await getInventoryModel();
         const products = await StoreProduct.find()
-        console.log('p',products)
+        // console.log('p',products)
         return NextResponse.json({message: 'got products', data: products})
     } catch (error) {
-        console.log("error in getimg products", error)
+        // console.log("error in getimg products", error)
         return NextResponse.json({message: "somethin wrong" , status: 500})
     }
 }

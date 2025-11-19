@@ -46,7 +46,7 @@ function AddProductDialog({ isOpen, onClose  }: addProductDialogProps) {
     useEffect(() => {
         const fetchProducts = async () => {
             const res = await axios.get('/api/inventory/get-all-products');
-            console.log("arr", res.data.data)
+            // console.log("arr", res.data.data)
             setProducts(res.data.data || []);
         };
         fetchProducts();
@@ -58,7 +58,7 @@ function AddProductDialog({ isOpen, onClose  }: addProductDialogProps) {
         const filtered = products.filter(product =>
             product.itemName.toLowerCase().includes(value.toLowerCase())
         );
-        console.log(filtered)
+        // console.log(filtered)
         setFilteredProducts(filtered);
         form.setValue("itemName", value); // update form field
     };

@@ -4,7 +4,7 @@ import {
     Table, TableHeader, TableRow, TableHead, TableBody, TableCell
 } from "@/components/ui/table";
 // import { getInventoryProduct } from "../actions/getInventoryProductList";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
@@ -30,14 +30,14 @@ function InventoryTable() {
         try {
             const res = await axios.get("/api/inventory/get-all-products");
             const allProducts = res.data.data || [];
-            console.log('a',allProducts)
+            // console.log('a',allProducts)
             setProducts(allProducts);
             setFilteredProducts(allProducts.filter((p: storeProduct) => p.itemQuantity > 0));
         } catch (error) {
             console.error("Error fetching products:", error);
         }
     }, []);
-    console.log('f',filteredProducts)
+    // console.log('f',filteredProducts)
 
     useEffect(() => {
         fetchProducts(); // run initially
@@ -47,7 +47,7 @@ function InventoryTable() {
         const fetchRole = async () => {
             try {
                 const res = await axios.get("/api/user/current-user")
-                console.log(res.data.user.role); // logs the role
+                // console.log(res.data.user.role); // logs the role
                 setRole(res.data.user.role);
             } catch (error) {
                 console.log(error)

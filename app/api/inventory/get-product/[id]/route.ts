@@ -17,7 +17,7 @@ export async function GET(request: NextRequest , context: {params : Promise<{ id
         }
         return NextResponse.json({ success: true, data: product });
     } catch (error) {
-        console.error("Error while getting product:", error);
+        // console.error("Error while getting product:", error);
         return NextResponse.json(
             { success: false, message: "Internal Server Error" },
             { status: 500 }

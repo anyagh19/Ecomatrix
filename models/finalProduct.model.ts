@@ -3,7 +3,7 @@ import { connectOutsideProcessingDb } from "@/db/dbConfig";
 
 export interface FinalProduct {
   _id: string;
-  name: string;
+  productName: string;
   requiredItems: {
     outsideId: string;       // relation to outsideProcessing product
     quantityNeeded: number;  // how many outside items needed to create this product
@@ -14,7 +14,7 @@ export interface FinalProduct {
 
 const FinalProductSchema = new Schema<FinalProduct>(
   {
-    name: {
+    productName: {
       type: String,
       required: true,
     },

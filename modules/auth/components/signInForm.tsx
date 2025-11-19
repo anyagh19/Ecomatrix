@@ -52,7 +52,7 @@ function SignInForm() {
         password: data.password
       });;
 
-      console.log("Signup success:", res.data);
+      console.log("Signin success:", res.data);
 
       if (res.data?.success) {
         await router.push(`/`);
