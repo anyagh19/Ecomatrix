@@ -1,9 +1,11 @@
+import { error } from "console";
 import mongoose, { Connection } from "mongoose";
 
 let authConnection: Connection | null = null;
 let inventoryConnection: Connection | null = null;
 let jobConnection: Connection | null = null;
 let outsideProcessingConnection : Connection | null = null;
+let manufacturedProductConnection: Connection | null = null;
 
 
 export async function connectAuthDb(): Promise<Connection> {
@@ -45,4 +47,15 @@ export async function connectOutsideProcessingDb(): Promise<Connection> {
   outsideProcessingConnection.on("error", (err) => console.error("❌ Inventory DB connection error:", err));
 
   return outsideProcessingConnection;
+}
+
+export async function connectManufacturedProductDb(): Promise<Connection> {
+  if(manufacturedProductConnection) return manufacturedProductConnection;
+
+  manufacturedProductConnection = await mongoose.createConnection(process.env.MONGODB_MANUFACTUREDPRODUCT_URL!);
+
+  manufacturedProductConnection.on("connected", () => console.log("✅ Connected to manu DB"))
+  manufacturedProductConnection.on("error" , (error) => console.error("manuerr" , error))
+
+  return manufacturedProductConnection;
 }

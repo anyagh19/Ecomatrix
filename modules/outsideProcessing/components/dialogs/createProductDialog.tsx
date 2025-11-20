@@ -7,6 +7,8 @@ import React, { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { Trash2 } from 'lucide-react';
 import { Form } from '@/components/ui/form';
+import { Item } from '@radix-ui/react-navigation-menu';
+import { outsideProcessingProduct } from '@/models/outsideProcessing.model';
 
 interface RequiredItem {
     itemName: string;
@@ -69,11 +71,13 @@ export default function CreateProductDialog({ isOpen, onClose }: CreateProductDi
     };
 
     const onSubmit = async (data: CreateForm) => {
-        console.log("Submitting:", data);
+        // console.log("Submitting:", data);
+
 
         try {
-            const res = await axios.post('/api/outside-processing/create-product', data);
-            console.log("Product created successfully:", res.data);
+    
+            await axios.post('/api/outside-processing/create-product', data);
+            // console.log("Product created successfully:", res.data);
 
             onClose();
             form.reset();
