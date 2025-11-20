@@ -18,7 +18,7 @@ export async function PUT(request: NextRequest) {
         const OutsideProcessing = await getOutsideProcessingModel();
 
         // Check if product exists
-        let product = await OutsideProcessing.findOne({ itemName }) as outsideProcessingProduct;
+        const product = await OutsideProcessing.findOne({ itemName }) as outsideProcessingProduct;
 
         if (product) {
             // Update quantity
@@ -32,7 +32,7 @@ export async function PUT(request: NextRequest) {
             });
         } else {
             // Create new product
-            let product = await OutsideProcessing.create({ itemName, quantity });
+            const product = await OutsideProcessing.create({ itemName, quantity });
 
             return NextResponse.json({
                 success: true,

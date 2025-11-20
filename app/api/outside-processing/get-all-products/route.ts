@@ -1,9 +1,9 @@
 import { connectOutsideProcessingDb } from "@/db/dbConfig";
 import { getOutsideProcessingModel } from "@/models/outsideProcessing.model";
-import { NextRequest, NextResponse } from "next/server";
-import { success } from "zod";
+import {  NextResponse } from "next/server";
 
-export async function GET(request: NextRequest) {
+
+export async function GET() {
     await connectOutsideProcessingDb()
 
     try {

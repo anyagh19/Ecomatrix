@@ -19,7 +19,7 @@ export async function GET(request: NextRequest , context: {params : Promise<{ id
     } catch (error) {
         // console.error("Error while getting product:", error);
         return NextResponse.json(
-            { success: false, message: "Internal Server Error" },
+            { success: false, message: "Internal Server Error" , error},
             { status: 500 }
         );
     }

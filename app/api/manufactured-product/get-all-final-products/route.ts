@@ -14,6 +14,6 @@ export async function GET() {
 
         return NextResponse.json({success: true , message: "got tfinal products " , data: response})
     } catch (error) {
-        return NextResponse.json({ message: "error in geting all final product" })
+        return NextResponse.json({ message: "error in geting all final product" , error})
     }
 }

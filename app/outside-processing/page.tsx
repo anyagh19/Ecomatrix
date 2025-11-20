@@ -6,7 +6,7 @@ import CreateProductDialog from '@/modules/outsideProcessing/components/dialogs/
 import OutsideProcessingTable from '@/modules/outsideProcessing/components/outsideProcessingTable'
 import React, { useState } from 'react'
 
-function page() {
+function Page() {
   const [isCreateProductOpen, setIsCreateProductOpen] = useState(false)
   const [isAddProductOpen , setIsAddProductOpen] = useState(false)
 
@@ -48,4 +48,4 @@ function page() {
   )
 }
 
-export default page
+export default Page

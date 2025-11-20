@@ -12,6 +12,6 @@ export async function GET() {
         return NextResponse.json({message: 'got products', data: products})
     } catch (error) {
         // console.log("error in getimg products", error)
-        return NextResponse.json({message: "somethin wrong" , status: 500})
+        return NextResponse.json({message: "somethin wrong" , status: 500 , error})
     }
 }

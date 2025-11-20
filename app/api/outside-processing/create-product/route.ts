@@ -63,11 +63,11 @@ export async function POST(request: NextRequest) {
       success: true,
       data: newProduct,
     });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json({
       status: 500,
       success: false,
-      message: error.message || "Something went wrong",
+      message: error
     });
   }
 }

@@ -51,12 +51,12 @@ export async function PUT(request: NextRequest) {
             { status: 201 }
         );
 
-    } catch (error: any) {
+    } catch (error) {
         return NextResponse.json(
             {
                 success: false,
                 message: "Server error",
-                error: error.message || error,
+                error,
             },
             { status: 500 }
         );
