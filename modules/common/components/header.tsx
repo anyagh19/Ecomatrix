@@ -141,6 +141,15 @@ function Header() {
                                 <DropdownMenuItem className="md:hidden">
                                     <Link href="/inventory" className="font-semibold">Inventory</Link>
                                 </DropdownMenuItem>
+                                <DropdownMenuItem className="md:hidden">
+                                    <Link href="/outside-processing" className="font-semibold">Outside Processing</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="md:hidden">
+                                    <Link href="/manufacturing" className="font-semibold">Manufacturing</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="md:hidden">
+                                    <Link href="/job" className="font-semibold">Jobs</Link>
+                                </DropdownMenuItem>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuItem>
                                     <Button variant="outline" onClick={handleLogout}>Logout</Button>
