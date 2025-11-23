@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogHeader } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { storeProduct } from '@/models/store.model';
 import axios from 'axios';
@@ -19,15 +19,17 @@ function ProductHistoryDialog({ isOpen, onClose, product }: productHistoryDialog
             const res = await axios.get(`/api/inventory/item-history/${product?._id}`)
             console.log("n", res.data)
             console.log('l', res.data.data)
-            setProducts(res.data.data)
+            setProducts(res.data.data || [])
         }
         fetchProducts();
     }, [product])
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent>
+            <DialogContent className="max-h-[80vh] overflow-y-auto">
                 <DialogHeader>
+                    <DialogTitle>
                     Product History
+                    </DialogTitle>
                 </DialogHeader>
                 <Table>
                     <TableHeader>

@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { storeProduct } from '@/models/store.model';
+import { useSocket } from '@/socket/socketProvider';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -19,7 +20,7 @@ interface addForm {
     quantityAdded: number;
 }
 
-function AddProductDialog({ isOpen, onClose  }: addProductDialogProps) {
+function AddProductDialog({ isOpen, onClose }: addProductDialogProps) {
     const form = useForm<addForm>({
         defaultValues: {
             itemName: "",
@@ -29,7 +30,7 @@ function AddProductDialog({ isOpen, onClose  }: addProductDialogProps) {
 
     const [products, setProducts] = useState<storeProduct[]>([]);
     const [filteredProducts, setFilteredProducts] = useState<storeProduct[]>([]);
-    const [userName , setUserName] = useState<string>('')
+    const [userName, setUserName] = useState<string>('')
 
     const router = useRouter()
 
@@ -41,7 +42,7 @@ function AddProductDialog({ isOpen, onClose  }: addProductDialogProps) {
             router.push("/inventory")
         }
         fetchUser()
-    },[])
+    }, [])
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -65,21 +66,29 @@ function AddProductDialog({ isOpen, onClose  }: addProductDialogProps) {
 
     const onSubmit = async (data: addForm) => {
         try {
-            console.log("name", data.itemName)
-            console.log("name", data.quantityAdded)
-            console.log(userName)
+            // console.log("name", data.itemName)
+            // console.log("name", data.quantityAdded)
+            // console.log(userName)
             await axios.post("/api/inventory/add-item", {
+                itemName: data.itemName,
+                quantityAdded: data.quantityAdded,
+                userName
+            });
+            addProduct({
                 itemName: data.itemName,
                 quantityAdded: data.quantityAdded,
                 userName
             });
             form.reset();
             onClose();
-            window.location.reload();
+
+            // window.location.reload();
         } catch (error) {
             console.error(error);
         }
     };
+
+    const { addProduct } = useSocket()
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>

@@ -40,10 +40,10 @@ function SignInForm() {
   const router = useRouter();
 
   const onSubmit = async (data: ProfileFormValues) => {
-    console.log("Form Data:", data)
+    // console.log("Form Data:", data)
     
-    console.log("email", data.email);
-    console.log("password", data.password);
+    // console.log("email", data.email);
+    // console.log("password", data.password);
    
     try {
     
@@ -52,11 +52,12 @@ function SignInForm() {
         password: data.password
       });;
 
-      console.log("Signin success:", res.data);
+      // console.log("Signin success:", res.data);
 
       if (res.data?.success) {
-        await router.push(`/`);
+        await router.push(`/dashboard`);
       }
+      window.location.reload();
     } catch (error: unknown) {
       if (error instanceof Error)
         console.error("Signup error:", error);

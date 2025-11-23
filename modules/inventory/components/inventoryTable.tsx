@@ -3,8 +3,6 @@
 import {
     Table, TableHeader, TableRow, TableHead, TableBody, TableCell
 } from "@/components/ui/table";
-// import { getInventoryProduct } from "../actions/getInventoryProductList";
-// import { Button } from "@/components/ui/button";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
@@ -13,6 +11,7 @@ import { DropdownMenuTrigger, DropdownMenu, DropdownMenuContent, DropdownMenuIte
 import UpdateProductDialog from "./dialogs/updateProductDialog";
 import ProductHistoryDialog from "./dialogs/productHistoryDialog";
 import IssueProductDialog from "./dialogs/issueProductDialog";
+import { useSocket } from "@/socket/socketProvider";
 
 function InventoryTable() {
     const [products, setProducts] = useState<storeProduct[]>([])
@@ -20,34 +19,31 @@ function InventoryTable() {
     const [role, setRole] = useState(null)
     const [selectedProduct, setSelectedProduct] = useState<storeProduct | null>(null);
     const [isUpdateProductOpen, setIsUpdateProductOpen] = useState(false)
-    const [isProductHistoryDialogOpen , setIsProductHistoryDialogOpen] = useState(false)
-    const [isIssueProductDialogOpen , setIsIssueProductDialogOpen] = useState(false)
+    const [isProductHistoryDialogOpen, setIsProductHistoryDialogOpen] = useState(false)
+    const [isIssueProductDialogOpen, setIsIssueProductDialogOpen] = useState(false)
 
-    // console.log("role", role)
+    const { onProductUpdate } = useSocket();
 
-    // ✅ useCallback prevents recreation of fetch function unnecessarily
     const fetchProducts = useCallback(async () => {
         try {
             const res = await axios.get("/api/inventory/get-all-products");
             const allProducts = res.data.data || [];
-            // console.log('a',allProducts)
+            console.log('Fetched products:', allProducts.length);
             setProducts(allProducts);
             setFilteredProducts(allProducts.filter((p: storeProduct) => p.itemQuantity > 0));
         } catch (error) {
             console.error("Error fetching products:", error);
         }
     }, []);
-    // console.log('f',filteredProducts)
 
     useEffect(() => {
-        fetchProducts(); // run initially
+        fetchProducts();
     }, [fetchProducts]);
 
     useEffect(() => {
         const fetchRole = async () => {
             try {
                 const res = await axios.get("/api/user/current-user")
-                // console.log(res.data.user.role); // logs the role
                 setRole(res.data.user.role);
             } catch (error) {
                 console.log(error)
@@ -55,6 +51,18 @@ function InventoryTable() {
         }
         fetchRole()
     }, [])
+
+    // Listen for real-time product updates via socket
+    useEffect(() => {
+        const unsubscribe = onProductUpdate((product) => {
+            console.log('Real-time product update received:', product);
+            // Refresh the product list when an update occurs
+            fetchProducts();
+        });
+
+        // Cleanup on unmount
+        return unsubscribe;
+    }, [onProductUpdate, fetchProducts]);
 
     const handleUpdateClick = (product: storeProduct) => {
         setSelectedProduct(product);
@@ -70,7 +78,6 @@ function InventoryTable() {
         setSelectedProduct(product);
         setIsIssueProductDialogOpen(true);
     };
-
 
     return (
         <div className="overflow-hidden rounded-md border">
@@ -97,9 +104,7 @@ function InventoryTable() {
                                     <TableCell>
                                         <DropdownMenu>
                                             <DropdownMenuTrigger>
-
                                                 <BsThreeDotsVertical />
-
                                             </DropdownMenuTrigger>
                                             <DropdownMenuContent>
                                                 <DropdownMenuItem className="font-semibold" onClick={() => handleIssueClick(p)}>Issue</DropdownMenuItem>
@@ -114,7 +119,6 @@ function InventoryTable() {
                     ))}
                 </TableBody>
             </Table>
-            {/* ✅ Dialog moved outside the map */}
             <UpdateProductDialog
                 isOpen={isUpdateProductOpen}
                 onClose={() => setIsUpdateProductOpen(false)}

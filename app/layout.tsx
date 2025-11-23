@@ -18,6 +18,8 @@ export const metadata: Metadata = {
 };
 
 import Header from "@/modules/common/components/header";
+import { SocketProvider } from "@/socket/socketProvider";
+// import { AuthProvider } from "@/modules/auth/hooks/authProvider";
 
 export default function RootLayout({
   children,
@@ -29,8 +31,12 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Header />
-        {children}
+        {/* <AuthProvider> */}
+          <SocketProvider>
+            <Header />
+            {children}
+          </SocketProvider>
+        {/* </AuthProvider> */}
       </body>
     </html>
   );

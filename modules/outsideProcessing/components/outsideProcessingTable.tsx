@@ -65,7 +65,7 @@ function OutsideProcessingTable() {
                             <TableCell>{i + 1}</TableCell>
                             <TableCell>{p.itemName}</TableCell>
                             <TableCell>{p.quantity}</TableCell>
-                            <TableCell>{new Date(p.createdAt).toLocaleDateString()}</TableCell>
+                            <TableCell>{new Date(p.updatedAt).toLocaleDateString()}</TableCell>
 
                             {role === "Admin" ?
                                 <>

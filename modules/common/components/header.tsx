@@ -17,43 +17,6 @@ import { Button } from "@/components/ui/button"
 import axios from "axios"
 import { useRouter } from "next/navigation"
 
-const components: { title: string; href: string; description: string }[] = [
-    {
-        title: "Dashboard",
-        href: "/dashboard",
-        description:
-            "A modal dialog that interrupts the user with important content and expects a response.",
-    },
-    {
-        title: "Inventory",
-        href: "/inventory",
-        description:
-            "For sighted users to preview content available behind a link.",
-    },
-    //   {
-    //     title: "Progress",
-    //     href: "/docs/primitives/progress",
-    //     description:
-    //       "Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.",
-    //   },
-    //   {
-    //     title: "Scroll-area",
-    //     href: "/docs/primitives/scroll-area",
-    //     description: "Visually or semantically separates content.",
-    //   },
-    //   {
-    //     title: "Tabs",
-    //     href: "/docs/primitives/tabs",
-    //     description:
-    //       "A set of layered sections of content—known as tab panels—that are displayed one at a time.",
-    //   },
-    //   {
-    //     title: "Tooltip",
-    //     href: "/docs/primitives/tooltip",
-    //     description:
-    //       "A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.",
-    //   },
-]
 
 
 function Header() {
@@ -89,38 +52,62 @@ function Header() {
             </div>
             <div className="hidden md:block">
                 <NavigationMenu viewport={false}>
-                    <NavigationMenuList>
-                        <NavigationMenuItem>
-                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link href="/dashboard">Dashboard</Link>
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
-                        <NavigationMenuItem>
-                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link href="/inventory">Inventory</Link>
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
-                        <NavigationMenuItem>
-                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link href="/outside-processing">Outside Processing</Link>
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
-                        <NavigationMenuItem>
-                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link href="/manufacturing">Manufacturing</Link>
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
-                        <NavigationMenuItem>
-                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link href="/ready-goods">Ready Goods</Link>
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
-                        <NavigationMenuItem>
-                            <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
-                                <Link href="/job">Jobs</Link>
-                            </NavigationMenuLink>
-                        </NavigationMenuItem>
-                    </NavigationMenuList>
+                    {!user ?
+                        (<>
+                            <NavigationMenuList>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                        <Link href="/">Home</Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                        <Link href="/about">About</Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                        <Link href="/contact">Contact</Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                            </NavigationMenuList>
+                        </>)
+                        :
+                        (<>
+                            <NavigationMenuList>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                        <Link href="/dashboard">Dashboard</Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                        <Link href="/inventory">Inventory</Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                        <Link href="/outside-processing">Outside Processing</Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                        <Link href="/manufacturing">Manufacturing</Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                        <Link href="/ready-goods">Ready Goods</Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                                <NavigationMenuItem>
+                                    <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                                        <Link href="/job">Jobs</Link>
+                                    </NavigationMenuLink>
+                                </NavigationMenuItem>
+                            </NavigationMenuList>
+                        </>)
+                    }
                 </NavigationMenu>
             </div>
             <div>
@@ -128,9 +115,23 @@ function Header() {
                     <DropdownMenuTrigger> <LuCircleUser className="text-2xl" /></DropdownMenuTrigger>
                     <DropdownMenuContent>
                         {!user ? (
-                            <Button asChild>
-                                <Link href="/sign-in">Login</Link>
-                            </Button>
+                            <>
+                                <DropdownMenuItem className="md:hidden">
+                                    <Link href="/" className="font-semibold">Home</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="md:hidden">
+                                    <Link href="/about" className="font-semibold">About</Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="md:hidden">
+                                    <Link href="/contact" className="font-semibold">Contact</Link>
+                                </DropdownMenuItem>
+
+                                <DropdownMenuSeparator />
+
+                                <Button asChild>
+                                    <Link href="/sign-in">Login</Link>
+                                </Button>
+                            </>
                         ) : (
                             <>
                                 <DropdownMenuLabel>Welcome, {user.name}</DropdownMenuLabel>
@@ -165,24 +166,5 @@ function Header() {
     )
 }
 
-function ListItem({
-    title,
-    children,
-    href,
-    ...props
-}: React.ComponentPropsWithoutRef<"li"> & { href: string }) {
-    return (
-        <li {...props}>
-            <NavigationMenuLink asChild>
-                <Link href={href}>
-                    <div className="text-sm leading-none font-medium">{title}</div>
-                    <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
-                        {children}
-                    </p>
-                </Link>
-            </NavigationMenuLink>
-        </li>
-    )
-}
 
 export default Header

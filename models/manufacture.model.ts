@@ -6,6 +6,8 @@ export interface manufacturedProduct {
     _id: string;
     productName: string;
     productQuantity: number;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 const manufacturedProductSchema = new Schema<manufacturedProduct>(
