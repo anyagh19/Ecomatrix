@@ -12,10 +12,12 @@ import UpdateProductDialog from "./dialogs/updateProductDialog";
 import ProductHistoryDialog from "./dialogs/productHistoryDialog";
 import IssueProductDialog from "./dialogs/issueProductDialog";
 import { useSocket } from "@/socket/socketProvider";
+// import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 function InventoryTable() {
     const [products, setProducts] = useState<storeProduct[]>([])
     const [filteredProducts, setFilteredProducts] = useState<storeProduct[]>([]);
+    
     const [role, setRole] = useState(null)
     const [selectedProduct, setSelectedProduct] = useState<storeProduct | null>(null);
     const [isUpdateProductOpen, setIsUpdateProductOpen] = useState(false)
@@ -30,11 +32,13 @@ function InventoryTable() {
             const allProducts = res.data.data || [];
             console.log('Fetched products:', allProducts.length);
             setProducts(allProducts);
-            setFilteredProducts(allProducts.filter((p: storeProduct) => p.itemQuantity > 0));
+            setFilteredProducts(allProducts.filter((p: storeProduct) => p.itemQuantity > 0))
         } catch (error) {
             console.error("Error fetching products:", error);
         }
     }, []);
+
+    
 
     useEffect(() => {
         fetchProducts();

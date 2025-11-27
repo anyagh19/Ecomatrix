@@ -38,7 +38,7 @@ function ManufacturingTable() {
 
       setProducts(res.data.data);
       setCursor(res.data.nextCursor);
-      setHasMore(res.data.data.length >= 20); // limit = 20
+      setHasMore(res.data.data.length >= 2); // limit = 20
     } catch (error) {
       console.log(error);
     }
@@ -55,7 +55,7 @@ function ManufacturingTable() {
 
       setProducts((prev) => [...prev, ...res.data.data]); // append
       setCursor(res.data.nextCursor);
-      setHasMore(res.data.data.length >= 20);
+      setHasMore(res.data.data.length >= 2);
     } catch (error) {
       console.log(error);
     }

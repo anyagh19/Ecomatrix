@@ -1,12 +1,20 @@
 // socket/socketService.ts
 import { Server } from 'socket.io'
 import Redis, { RedisOptions } from 'ioredis';
+import dotenv from "dotenv";
+dotenv.config();
+
 
 export interface ProductUpdateEvent {
     itemName: string;
     quantityAdded: number;
     userName: string;
 }
+// console.log("REDIS_HOST:", process.env.REDIS_HOST);
+// console.log("REDIS_PORT:", process.env.REDIS_PORT);
+// console.log("REDIS_USER:", process.env.REDIS_USER);
+// console.log("REDIS_PASSWORD:", process.env.REDIS_PASSWORD ? "****" : "NOT SET");
+
 
 const REDIS_CONFIG: RedisOptions = {
     host: process.env.REDIS_HOST,
@@ -21,11 +29,13 @@ const REDIS_CONFIG: RedisOptions = {
     },
     maxRetriesPerRequest: 3,
     enableReadyCheck: true,
-    connectTimeout: 10000,
-    lazyConnect: true, // Don't connect immediately
+    connectTimeout: 0,
+    lazyConnect: false, // Don't connect immediately
     tls: {
         rejectUnauthorized: false // Accept self-signed certificates from Aiven
     },
+    // healthCheckInterval: 10,
+    // socketKeepalive: true,
 };
 
 let pub: Redis | null = null;
@@ -46,7 +56,7 @@ class SocketService {
                 origin: '*'
             }
         })
-        
+
         this.initRedis();
     }
 

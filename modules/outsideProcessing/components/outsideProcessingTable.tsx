@@ -1,6 +1,7 @@
 "use client"
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
+import { Pagination, PaginationContent, PaginationItem, PaginationNext, PaginationPrevious } from '@/components/ui/pagination'
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
 import { FinalProduct } from '@/models/finalProduct.model'
 import { outsideProcessingProduct } from '@/models/outsideProcessing.model'
@@ -10,25 +11,48 @@ import { BsThreeDotsVertical } from 'react-icons/bs'
 
 function OutsideProcessingTable() {
     const [products, setProducts] = useState<outsideProcessingProduct[]>([])
+    const [cursor, setCursor] = useState<string | null>(null);
+    const [hasMore, setHasMore] = useState(true);
     const [role, setRole] = useState(null)
-    const [isIssueDialogOpen, setIsIssueDialogOpen] = useState(false)
-    const [selectedProduct, setSelectedProduct] = useState<FinalProduct | null>(null);
     
+    const fetchOutsideProduct = async () => {
+        try {
+            const response = await axios.post('/api/outside-processing/get-all-products', { cursor: null })
+            if (!response) {
+                console.log("no response")
+            }
+
+            setProducts(response.data.data)
+            setCursor(response.data.NextCursor)
+            setHasMore(response.data.data.length >= 2)
+           
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     useEffect(() => {
-        const fetchOutsideProduct = async () => {
-            try {
-                const response = await axios.get('/api/outside-processing/get-all-products')
-                if (!response) {
-                    console.log("no response")
-                }
-                setProducts(response.data.data)
-            } catch (error) {
-                console.log(error)
-            }
-        }
         fetchOutsideProduct()
     }, [])
+    const fetchNextOutsideProduct = async () => {
+        if (!cursor) return
+        try {
+
+            const response = await axios.post('/api/outside-processing/get-all-products', { cursor })
+            if (!response) {
+                console.log("no response")
+            }
+
+            setProducts((prev) => [...prev, ...response.data.data])
+            setCursor(response.data.NextCursor)
+            setHasMore(response.data.data.length >= 2)
+           
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     useEffect(() => {
         const fetchRole = async () => {
             try {
@@ -41,11 +65,6 @@ function OutsideProcessingTable() {
         }
         fetchRole()
     }, [])
-
-    // const handleIssueClick = (product: {_id: string ,productName: string , requiredItems: []}) => {
-    //     setSelectedProduct(product)
-    //     setIsIssueDialogOpen(true)
-    // }
 
     return (
         <div className="overflow-hidden rounded-md border">
@@ -89,7 +108,30 @@ function OutsideProcessingTable() {
                     ))}
                 </TableBody>
             </Table>
-            {/* ✅ Dialog moved outside the map */}
+            <div className="py-4">
+                <Pagination>
+                    <PaginationContent>
+
+                        <PaginationItem>
+                            <PaginationPrevious
+                                className="cursor-pointer"
+                                onClick={() => {
+                                    setProducts([]);
+                                    fetchOutsideProduct(); // load first page again
+                                }}
+                            />
+                        </PaginationItem>
+
+                        <PaginationItem>
+                            <PaginationNext
+                                className={`cursor-pointer ${!hasMore && "opacity-40 pointer-events-none"}`}
+                                onClick={fetchNextOutsideProduct}
+                            />
+                        </PaginationItem>
+
+                    </PaginationContent>
+                </Pagination>
+            </div>
 
 
         </div>
