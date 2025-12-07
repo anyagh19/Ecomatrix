@@ -9,7 +9,7 @@ export async function GET() {
         
         
         const StoreProduct = await getInventoryModel();
-        const products = await StoreProduct.find()
+        const products = await StoreProduct.find().select('-productUpdateHistory')
         // console.log('p',products)
         return NextResponse.json({
             success: true,

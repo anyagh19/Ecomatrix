@@ -1,14 +1,27 @@
-'use client'
+// app/manufacturing/page.tsx  (NO "use client")
 
-import ManufacturingTable from '@/modules/manufacturing/components/manufacturingTable'
-import React from 'react'
+import ManufacturingTable from "@/modules/manufacturing/components/manufacturingTable";
 
-function Page() {
+export default async function Page() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_BASE_URL}/api/manufactured-product/get-manufacturing-products`,
+    {
+      method: "POST",
+      body: JSON.stringify({ cursor: null }),
+      headers: { "Content-Type": "application/json" },
+      cache: "no-store", // IMPORTANT for dynamic SSR
+    }
+  );
+
+  const data = await res.json();
+
   return (
     <div>
-      <ManufacturingTable />
+      <ManufacturingTable
+        initialProducts={data.data}
+        initialCursor={data.nextCursor}
+        initialHasMore={data.data.length >= 2}
+      />
     </div>
-  )
+  );
 }
-
-export default Page
